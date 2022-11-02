@@ -1,0 +1,11 @@
+{
+  "name": "nlw.copa",
+  "version": "1.0.0",
+  "author": "Gustavo Carmo <gustavo.silva.carmo@hotmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "packages/shared/*"
+  ]
+}
