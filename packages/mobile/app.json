@@ -1,7 +1,9 @@
 {
   "expo": {
-    "name": "nlw.copa-mobile",
-    "slug": "nlw.copa-mobile",
+    "name": "@nlw.copa/mobile",
+    "slug": "nlwcopamobile",
+    "scheme": "nlwcopamobile",
+    "owner": "gustavocarmo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
