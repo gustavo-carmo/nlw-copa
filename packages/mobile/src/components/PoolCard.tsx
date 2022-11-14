@@ -2,6 +2,7 @@ import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Heading, HStack, Text, VStack } from 'native-base';
 
 import { Participants, ParticipantProps } from './Participants';
+import { useNavigation } from '@react-navigation/native';
 
 export interface PoolPros {
   id: string;

@@ -1,12 +1,14 @@
 import Fastify, { FastifyInstance } from "fastify";
 import cors from '@fastify/cors';
-import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
-import ShortUniqueId from 'short-unique-id';
+import jwt from '@fastify/jwt';
 
-export const prisma = new PrismaClient({
-  log: ['query']
-});
+import { auth } from "./routes/auth";
+import { guess } from "./routes/guess";
+import { pool } from "./routes/pool";
+import { user } from "./routes/user";
+import { game } from "./routes/game";
+
+
 
 const start = async () => {
   const fastify: FastifyInstance = Fastify({
@@ -15,51 +17,21 @@ const start = async () => {
 
   await fastify.register(cors, {
     origin: true
-  })
-
-  fastify.get("/guesses/count", async () => {
-    const count = await prisma.guess.count();
-    return { count }
   });
 
-  fastify.get("/users/count", async () => {
-    const count = await prisma.user.count();
-    return { count }
+  await fastify.register(jwt, {
+    secret: 'nlwcopa'
   });
 
-  fastify.get("/pools/count", async () => {
-    const count = await prisma.pool.count();
-    return { count }
-  });
+  await fastify.register(auth);
+  await fastify.register(game);
+  await fastify.register(guess);
+  await fastify.register(pool);
+  await fastify.register(user);
 
-  fastify.post("/pools", async (request, reply) => {
-    try {
-      const createPoolBody = z.object({
-        title: z.string()
-      })
-
-      const { title } = createPoolBody.parse(request.body);
-
-      const generate = new ShortUniqueId({ length: 6});
-      const code = (String(generate())).toUpperCase();
-
-      await prisma.pool.create({
-        data: {
-          title,
-          code
-        }
-      });
-
-
-      return reply.status(201).send({ code });
-    } catch (err) {
-      return reply.status(400).send({ err });
-    }
-  });
 
   try {
     await fastify.listen({ port: 3333, host: '0.0.0.0' });
-    // await fastify.listen({ port: 3333 });
   } catch (err) {
     fastify.log.error(err)
     process.exit(1)
